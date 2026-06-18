@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해외 원조 사상 시뮬레이터: 사상가 선택</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Oswald:wght@500&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; transition: background-color 0.3s; }
+        .oswald { font-family: Oswald, sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="p-4 md:p-8 bg-slate-50 min-h-screen">
+
+<div class="max-w-6xl mx-auto">
+    <!-- 상단 헤더 -->
+    <header class="text-center mb-10 p-8 bg-white rounded-3xl shadow-md border border-slate-100 relative overflow-hidden">
+        <div id="author-background" class="absolute inset-0 opacity-10 transition-colors"></div>
+        <div class="relative z-10">
+            <span class="text-4xl">🌍</span>
+            <h1 id="main-title" class="text-3xl font-bold text-slate-950 mt-2 mb-2">해외 원조 사상 시뮬레이터</h1>
+            <p id="main-desc" class="text-slate-500">사상가를 선택하여 각 관점에 따른 원조 정당성을 시뮬레이션해 보세요.</p>
+        </div>
+    </header>
+
+    <!-- 1. 사상가 선택 화면 (초기 화면) -->
+    <section id="selector-screen" class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in">
+        
+        <!-- 노직 카드 (개인과 돈 형상화) -->
+        <button onclick="showSimulation('Nozick')" class="card bg-white rounded-3xl shadow-lg border-2 border-transparent hover:border-amber-500 transition-all flex flex-col overflow-hidden text-left h-full">
+            <div class="w-full h-48 relative overflow-hidden bg-amber-100">
+                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=500" 
+                     alt="Nozick - Individual and Money" 
+                     class="w-full h-full object-cover"
+                     onerror="handleImageError(this, '🪙 소유권 & 화폐', 'bg-gradient-to-br from-amber-400 to-yellow-600')">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <span class="absolute bottom-3 left-4 text-xs bg-amber-500 text-white font-bold px-3 py-1 rounded-full shadow">소유, 자선 관점</span>
+            </div>
+            <div class="p-6 flex flex-col justify-between flex-grow">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-950 mb-3">노직 (Nozick)</h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        해외 원조는 의무가 아닌 개인의 <span class="font-bold text-amber-600">자발적 자선</span> 영역. 최초 취득과 이전 과정에서 부정한 방법이 개입되지 않았다면 내 소유권 is 절대적이며, 국가가 세금이나 법으로 원조를 강제하는 것은 정당하지 못함.
+                    </p>
+                </div>
+                <div class="mt-5 pt-4 border-t border-slate-100 text-xs font-bold text-amber-500 flex items-center justify-end">
+                    시뮬레이션 시작하기 ➔
+                </div>
+            </div>
+        </button>
+
+        <!-- 싱어 카드 (고통 감소 형상화) -->
+        <button onclick="showSimulation('Singer')" class="card bg-white rounded-3xl shadow-lg border-2 border-transparent hover:border-rose-500 transition-all flex flex-col overflow-hidden text-left h-full">
+            <div class="w-full h-48 relative overflow-hidden bg-rose-100">
+                <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=500" 
+                     alt="Singer - Global Giving and Pain Relief" 
+                     class="w-full h-full object-cover"
+                     onerror="handleImageError(this, '🤝 나눔 & 고통 경감', 'bg-gradient-to-br from-rose-400 to-red-600')">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <span class="absolute bottom-3 left-4 text-xs bg-rose-500 text-white font-bold px-3 py-1 rounded-full shadow">고통 감소, 공리주의</span>
+            </div>
+            <div class="p-6 flex flex-col justify-between flex-grow">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-950 mb-3">싱어 (Singer)</h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        해외 원조는 국경을 초월한 <span class="font-bold text-rose-600">'보편적 도덕 의무'</span>임. 고통을 느낄 수 있는 존재들의 이익을 평등하게 고려해야 하므로, 선진국 시민들이 사치 비용을 줄여 절대빈곤 고통을 돕는 것은 인류 전체의 공리 실천임.
+                    </p>
+                </div>
+                <div class="mt-5 pt-4 border-t border-slate-100 text-xs font-bold text-rose-500 flex items-center justify-end">
+                    시뮬레이션 시작하기 ➔
+                </div>
+            </div>
+        </button>
+
+        <!-- 롤스 카드 (정의 justice 형상화) -->
+        <button onclick="showSimulation('Rawls')" class="card bg-white rounded-3xl shadow-lg border-2 border-transparent hover:border-purple-600 transition-all flex flex-col overflow-hidden text-left h-full">
+            <div class="w-full h-48 relative overflow-hidden bg-purple-100">
+                <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=500" 
+                     alt="Rawls - Scales of Justice" 
+                     class="w-full h-full object-cover"
+                     onerror="handleImageError(this, '⚖️ 정의 Justice', 'bg-gradient-to-br from-purple-500 to-indigo-700')">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <span class="absolute bottom-3 left-4 text-xs bg-purple-600 text-white font-bold px-3 py-1 rounded-full shadow">질서 정연한 사회</span>
+            </div>
+            <div class="p-6 flex flex-col justify-between flex-grow">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-950 mb-3">롤스 (Rawls)</h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        해외 원조는 국제 정의를 실현하기 위한 <span class="font-bold text-purple-600">'공적 의무'</span>임. 목적은 빈곤국을 부유하게 만드는 것이 아니라, 스스로 시민의 인권을 보장할 수 있는 '질서 정연한 사회'로 만드는 것이며 자립 시 원조는 중단되어야 함.
+                    </p>
+                </div>
+                <div class="mt-5 pt-4 border-t border-slate-100 text-xs font-bold text-purple-500 flex items-center justify-end">
+                    시뮬레이션 시작하기 ➔
+                </div>
+            </div>
+        </button>
+    </section>
+
+    <!-- 2. 시뮬레이션 화면 (초기에는 숨김) -->
+    <section id="simulation-screen" class="grid lg:grid-cols-12 gap-8 hidden fade-in">
+        <!-- 설정 패널 (동적으로 채워짐) -->
+        <section id="setup-panel" class="lg:col-span-5 bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-100 flex flex-col justify-between">
+            <!-- 사상가별 입력 컨트롤이 여기에 들어감 -->
+        </section>
+
+        <!-- 결과 출력 패널 (동적으로 채워짐) -->
+        <section id="result-panel" class="lg:col-span-7 flex items-center justify-center bg-slate-100 rounded-3xl p-6 min-h-[300px]">
+            <!-- 판별 결과 카드가 여기에 들어감 -->
+        </section>
+    </section>
+
+    <!-- 하단 내비게이션 (시뮬레이션 화면에서만 표시) -->
+    <footer id="sim-footer" class="mt-8 text-center hidden">
+        <button onclick="showSelector()" class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-700 transition-all mx-auto shadow-md">
+            <span>🔙</span> 사상가 다시 선택하기
+        </button>
+    </footer>
+</div>
+
+<script>
+    // 현재 선택된 사상가 상태
+    let currentAuthor = null;
+
+    // 이미지 에러 핸들러 (Unsplash 로딩이 불가능하거나 iframe 샌드박스로 인해 차단될 시 작동하는 우아한 폴백)
+    function handleImageError(img, fallbackText, bgClass) {
+        img.style.display = 'none';
+        const parent = img.parentElement;
+        const fallbackDiv = document.createElement('div');
+        fallbackDiv.className = `w-full h-full flex flex-col items-center justify-center text-white font-bold text-sm tracking-wide ${bgClass}`;
+        fallbackDiv.innerHTML = `<span class="text-2xl mb-1">${fallbackText.split(' ')[0]}</span><span>${fallbackText.split(' ').slice(1).join(' ')}</span>`;
+        parent.appendChild(fallbackDiv);
+    }
+
+    // 초기 화면 복귀 함수
+    function showSelector() {
+        currentAuthor = null;
+        document.getElementById('selector-screen').classList.remove('hidden');
+        document.getElementById('simulation-screen').classList.add('hidden');
+        document.getElementById('sim-footer').classList.add('hidden');
+        document.getElementById('author-background').classList.remove('bg-slate-900', 'bg-blue-900', 'bg-purple-900');
+        document.getElementById('main-title').innerText = "해외 원조 사상 시뮬레이터";
+        document.getElementById('main-desc').innerText = "사상가를 선택하여 각 관점에 따른 원조 정당성을 시뮬레이션해 보세요.";
+        document.body.style.backgroundColor = "#f8fafc";
+    }
+
+    // 사상가별 시뮬레이션 화면 표시 함수
+    function showSimulation(author) {
+        currentAuthor = author;
+        document.getElementById('selector-screen').classList.add('hidden');
+        document.getElementById('simulation-screen').classList.remove('hidden');
+        document.getElementById('sim-footer').classList.remove('hidden');
+
+        const title = document.getElementById('main-title');
+        const desc = document.getElementById('main-desc');
+        const setupPanel = document.getElementById('setup-panel');
+        const bg = document.getElementById('author-background');
+
+        // 사상가별 테마 및 입력창 구성
+        if (author === 'Nozick') {
+            title.innerText = "👤 노직의 소유 권리론 시뮬레이션";
+            desc.innerText = "부당한 강제와 자발적 자선의 경계를 판별 알고리즘을 통해 탐구합니다.";
+            bg.className = "absolute inset-0 opacity-10 transition-colors bg-slate-900";
+            document.body.style.backgroundColor = "#f0f4f8";
+            renderNozickSetup(setupPanel);
+        } else if (author === 'Singer') {
+            title.innerText = "⚖️ 싱어의 이익 평등 고려 시뮬레이션";
+            desc.innerText = "한계 효용과 절대빈곤 고통 감소에 따른 보편적 도덕 의무를 탐구합니다.";
+            bg.className = "absolute inset-0 opacity-10 transition-colors bg-blue-900";
+            document.body.style.backgroundColor = "#e6f0f8";
+            renderSingerSetup(setupPanel);
+        } else if (author === 'Rawls') {
+            title.innerText = "🏛️ 롤스의 만민법 시뮬레이션";
+            desc.innerText = "고통받는 사회의 제도적 자립과 원조 중단(차단점)을 시뮬레이션합니다.";
+            bg.className = "absolute inset-0 opacity-10 transition-colors bg-purple-900";
+            document.body.style.backgroundColor = "#eee6f8";
+            renderRawlsSetup(setupPanel);
+        }
+        
+        // 시뮬레이션 시작 시 기본 판별 실행
+        simulateAid();
+    }
+
+    // --- 노직 입력창 렌더링 ---
+    function renderNozickSetup(container) {
+        container.innerHTML = `
+            <div class="space-y-6">
+                <h2 class="text-xl font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center gap-2">
+                    <span>⚙️&nbsp;</span> 노직 관점 시나리오 설정
+                </h2>
+                <div>
+                    <label class="block font-bold text-slate-800 mb-2">1. 원조 재원 조달 조건</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex flex-col items-center p-3 rounded-xl border-2 border-slate-100 hover:border-slate-300 cursor-pointer bg-slate-50 has-[:checked]:border-slate-900 has-[:checked]:bg-slate-900 has-[:checked]:text-white transition-all text-center">
+                            <input type="radio" name="funding_type" value="tax" checked class="sr-only" onchange="simulateAid()">
+                            <span class="text-lg mb-1">🏦</span>
+                            <span class="text-xs font-bold">정부 강제 세금<br>(국가 법적 강제)</span>
+                        </label>
+                        <label class="flex flex-col items-center p-3 rounded-xl border-2 border-slate-100 hover:border-slate-300 cursor-pointer bg-slate-50 has-[:checked]:border-slate-900 has-[:checked]:bg-slate-900 has-[:checked]:text-white transition-all text-center">
+                            <input type="radio" name="funding_type" value="charity" class="sr-only" onchange="simulateAid()">
+                            <span class="text-lg mb-1">🤝</span>
+                            <span class="text-xs font-bold">개인 자발적 기부<br>(인도주의적 자선)</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-800 mb-2">2. 정당성 훼손 여부</label>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs text-slate-600 leading-relaxed">
+                        최초 취득 및 이전 과정에서 부정한 방법이 개입되지 않은 경우 소유권은 절대적입니다. 부정한 과정이 있다면 국가적 교정의 대상이 될 수 있습니다.
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- 싱어 입력창 렌더링 ---
+    function renderSingerSetup(container) {
+        container.innerHTML = `
+            <div class="space-y-6">
+                <h2 class="text-xl font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center gap-2">
+                    <span>⚙️&nbsp;</span> 싱어 관점 시나리오 설정
+                </h2>
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">1. 나의 한계 효용 수준 설정</label>
+                    <p class="text-xs text-slate-400 mb-2">나의 사소한 희생(사치품 감축 등) 수준이 기부 손실보다 큰지 비교합니다.</p>
+                    <div class="space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-600 mb-1">
+                                <span>나의 한계 효용 (기부로 인한 손실)</span>
+                                <span id="my_utility_val" class="text-slate-900 font-bold oswald">80</span>
+                            </div>
+                            <input type="range" id="my_marginal_utility" min="0" max="150" value="80" class="w-full h-1.5 bg-slate-200 rounded-lg cursor-pointer accent-blue-900" oninput="updateVal('my_marginal_utility', 'my_utility_val')">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-600 mb-1">
+                                <span>타인의 절대빈곤 고통 경감 수준</span>
+                                <span id="others_pain_val" class="text-slate-900 font-bold oswald">100</span>
+                            </div>
+                            <input type="range" id="others_pain_reduction" min="0" max="150" value="100" class="w-full h-1.5 bg-slate-200 rounded-lg cursor-pointer accent-blue-900" oninput="updateVal('others_pain_reduction', 'others_pain_val')">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-800 mb-2">2. 수혜국의 빈곤 유형</label>
+                    <select id="singer_poverty_type" class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-sm font-medium focus:ring-2 focus:ring-blue-300" onchange="simulateAid()">
+                        <option value="absolute">절대빈곤 (돈이 삶을 근본적으로 바꾸는 요소임)</option>
+                        <option value="relative">상대적 빈곤 (고통 경감 시급성 다소 낮음)</option>
+                    </select>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- 롤스 입력창 렌더링 ---
+    function renderRawlsSetup(container) {
+        container.innerHTML = `
+            <div class="space-y-6">
+                <h2 class="text-xl font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center gap-2">
+                    <span>⚙️&nbsp;</span> 롤스 관점 시나리오 설정
+                </h2>
+                <div>
+                    <label class="block font-bold text-slate-800 mb-2">1. 수혜국의 정치적·사회적 상태</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex flex-col items-center p-3 rounded-xl border-2 border-slate-100 hover:border-slate-300 cursor-pointer bg-slate-50 has-[:checked]:border-purple-900 has-[:checked]:bg-purple-900 has-[:checked]:text-white transition-all text-center">
+                            <input type="radio" name="state_system" value="distressed" checked class="sr-only" onchange="simulateAid()">
+                            <span class="text-lg mb-1">⚠️</span>
+                            <span class="text-xs font-bold leading-tight">고통받는 사회<br>(제도 미비 / 인권 미보장)</span>
+                        </label>
+                        <label class="flex flex-col items-center p-3 rounded-xl border-2 border-slate-100 hover:border-slate-300 cursor-pointer bg-slate-50 has-[:checked]:border-purple-900 has-[:checked]:bg-purple-900 has-[:checked]:text-white transition-all text-center">
+                            <input type="radio" name="state_system" value="ordered" class="sr-only" onchange="simulateAid()">
+                            <span class="text-lg mb-1">⚖️</span>
+                            <span class="text-xs font-bold leading-tight">질서 정연한 사회<br>(정치적·제도적 자립 달성)</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-800 mb-2">2. 원조의 공적 의무적 성격</label>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs text-slate-600 leading-relaxed">
+                        원조의 목적은 대상 국가를 단순히 물질적으로 부유하게 만드는 것이 아니라, 자립적인 제도를 갖추도록 돕는 국제 정의 실현입니다.
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // 슬라이더 값 업데이트 및 시뮬레이션
+    function updateVal(sliderId, textId) {
+        const val = document.getElementById(sliderId).value;
+        document.getElementById(textId).innerText = val;
+        simulateAid();
+    }
+
+    // 통합 시뮬레이션 판별 함수
+    function simulateAid() {
+        const resultPanel = document.getElementById('result-panel');
+        resultPanel.innerHTML = ""; // 결과창 초기화
+        resultPanel.className = "lg:col-span-7 flex items-center justify-center"; // 기본 스타일 초기화
+
+        if (!currentAuthor) return;
+
+        // 1. 노직 (Nozick) 소유 권리론 판별
+        if (currentAuthor === 'Nozick') {
+            const fundingType = document.querySelector('input[name="funding_type"]:checked').value;
+            const is_forced_tax = (fundingType === "tax");
+            const is_voluntary_charity = (fundingType === "charity");
+
+            let status = "none";
+            let reason = "";
+            if (is_forced_tax) {
+                status = "reject";
+                reason = "해외 원조는 의무가 아닌 개인의 '자발적 자선' 영역임. 최초 취득과 이전 과정에서 부정한 방법이 개입되지 않았다면 개인의 소유권은 절대적이며, 국가가 세금이나 법으로 원조를 강제하는 것은 정당하지 못한 자유권 및 소유권 침해임.";
+            } else if (is_voluntary_charity) {
+                status = "approve";
+                reason = "개인의 정당한 소유권과 자유 의지에 기반한 순수한 기부 및 인도주의적 자선 행위임. 강제성이 배제된 '자발적 자선'으로서 정당함.";
+            }
+            renderCard(resultPanel, "👤 노직 (Nozick)", "소유, 자선 관점", status, reason);
+        
+        // 2. 싱어 (Singer) 공리주의 판별
+        } else if (currentAuthor === 'Singer') {
+            const my_marginal_utility = parseInt(document.getElementById('my_marginal_utility').value);
+            const others_pain_reduction = parseInt(document.getElementById('others_pain_reduction').value);
+            const povertyType = document.getElementById('singer_poverty_type').value;
+
+            let status = "none";
+            let reason = "";
+            
+            if (others_pain_reduction > my_marginal_utility && povertyType === 'absolute') {
+                status = "approve";
+                reason = "해외 원조는 국경을 초월한 '보편적 도덕 의무'임. 이익 평등 고려의 원칙에 따라, 선진국 시민들이 사치에 쓰는 비용을 줄여 절대빈곤으로 고통받는 이들을 돕는 것은 전체 공리를 늘리는 실천임. 극심한 빈곤에 처한 사람에게 물질적 조력(돈)은 삶을 근본적으로 바꾸는 결정적 요소임.";
+            } else if (my_marginal_utility >= others_pain_reduction) {
+                status = "hold";
+                reason = "기부로 인해 나 자신마저 더 큰 고통(빈곤)에 빠지거나 우리 사회의 큰 손실을 초래한다면 공리의 원칙에 어긋나므로 원조 보류 요건에 해당함.";
+            } else {
+                status = "reject";
+                reason = "상대적 빈곤 상태 등 고통 경감의 시급성이 비교적 떨어지는 경우, 한계 효용을 깎아가며 원조해야 하는 절대적인 도덕적 의무가 성립하기 어려움.";
+            }
+            renderCard(resultPanel, "⚖️ 싱어 (Singer)", "고통 감소, 공리주의 관점", status, reason);
+
+        // 3. 롤스 (Rawls) 정의론 판별
+        } else if (currentAuthor === 'Rawls') {
+            const stateSystem = document.querySelector('input[name="state_system"]:checked').value;
+            const is_distressed_state = (stateSystem === "distressed");
+            const is_well_ordered = (stateSystem === "ordered");
+
+            let status = "none";
+            let reason = "";
+            if (is_distressed_state) {
+                status = "approve";
+                reason = "해외 원조는 국제 정의를 실현하기 위한 '공적 의무'임. 원조의 목적은 수혜국을 무작정 물질적으로 부유하게 만드는 것이 아니라, 그 사회가 스스로 시민의 기본적 인권을 보장할 수 있는 '질서 정연한 사회'로 나아가도록 이끄는 것임.";
+            } else if (is_well_ordered) {
+                status = "stop";
+                reason = "수혜국이 이미 정치적·제도적 자립을 이루어 정당한 제도를 갖춘 '질서 정연한 사회'이므로, 아무리 빈곤할지라도 원조의 목표가 완전히 달성되어 지원을 즉각 중단(차단점 도달)해야 함.";
+            }
+            renderCard(resultPanel, "🏛️ 롤스 (Rawls)", "질서 정연한 사회, 정의론 관점", status, reason);
+        }
+    }
+
+    // 결과 카드 렌더링 함수
+    function renderCard(container, name, theory, status, reason) {
+        container.className = "lg:col-span-7 space-y-6"; // 결과창 영역 스타일 조정
+
+        let badgeColor = "bg-slate-100 text-slate-700";
+        let statusLabel = "판단 유보";
+        let borderColor = "border-slate-100";
+
+        if (status === "approve") {
+            badgeColor = "bg-green-100 text-green-700";
+            statusLabel = "찬성 (APPROVED)";
+            borderColor = "border-green-200";
+        } else if (status === "reject") {
+            badgeColor = "bg-red-100 text-red-700";
+            statusLabel = "반대 (REJECTED)";
+            borderColor = "border-red-200";
+        } else if (status === "stop") {
+            badgeColor = "bg-orange-100 text-orange-700";
+            statusLabel = "중단 (STOP)";
+            borderColor = "border-orange-200";
+        } else if (status === "hold") {
+            badgeColor = "bg-amber-100 text-amber-700";
+            statusLabel = "보류 (HOLD)";
+            borderColor = "border-amber-200";
+        }
+
+        container.innerHTML = `
+            <div class="card bg-white p-8 rounded-3xl shadow-lg border-2 ${borderColor} fade-in flex flex-col items-center gap-5 text-center min-h-[300px] justify-center">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 text-left">${name}</h3>
+                        <span class="text-xs text-slate-400 font-medium block text-left">${theory}</span>
+                    </div>
+                    <span class="self-start sm:self-center px-4 py-1.5 rounded-full font-bold text-xs ${badgeColor}">${statusLabel}</span>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 w-full flex-grow flex items-center justify-center">
+                    <p class="text-sm font-medium text-slate-700 leading-relaxed text-left">${reason}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // 초기 화면 복귀
+    showSelector();
+</script>
+
+</body>
+</html>
